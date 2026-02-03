@@ -1,0 +1,11 @@
+@using Microsoft.AspNetCore.Routing
+@{
+    var storeId = Context.GetRouteData().Values["storeId"]?.ToString();
+}
+
+@if (!string.IsNullOrEmpty(storeId))
+{
+    <a asp-controller="UIVAT" asp-action="Settings" asp-route-storeId="@storeId" class="nav-link">
+        <span class="nav-link-title">VAT</span>
+    </a>
+}

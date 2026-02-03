@@ -1,0 +1,676 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/BTCPayServer.Plugins.VAT.csproj": {}
+  },
+  "projects": {
+    "/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/BTCPayServer.Plugins.VAT.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/BTCPayServer.Plugins.VAT.csproj",
+        "projectName": "BTCPayServer.Plugins.VAT",
+        "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/BTCPayServer.Plugins.VAT.csproj",
+        "packagesPath": "/Users/comradeblin/.nuget/packages/",
+        "outputPath": "/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/comradeblin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer/BTCPayServer.csproj": {
+                "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer/BTCPayServer.csproj",
+                "excludeAssets": "runtime, native"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.106/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Abstractions/BTCPayServer.Abstractions.csproj": {
+      "version": "2.3.4",
+      "restore": {
+        "projectUniqueName": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Abstractions/BTCPayServer.Abstractions.csproj",
+        "projectName": "BTCPayServer.Abstractions",
+        "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Abstractions/BTCPayServer.Abstractions.csproj",
+        "packagesPath": "/Users/comradeblin/.nuget/packages/",
+        "outputPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Abstractions/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/NuGet.Config",
+          "/Users/comradeblin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/BTCPayServer.Client.csproj": {
+                "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/BTCPayServer.Client.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "HtmlSanitizer": {
+              "target": "Package",
+              "version": "[8.0.838, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "Microsoft.SourceLink.GitHub": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.106/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/BTCPayServer.Client.csproj": {
+      "version": "2.0.1",
+      "restore": {
+        "projectUniqueName": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/BTCPayServer.Client.csproj",
+        "projectName": "BTCPayServer.Client",
+        "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/BTCPayServer.Client.csproj",
+        "packagesPath": "/Users/comradeblin/.nuget/packages/",
+        "outputPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/NuGet.Config",
+          "/Users/comradeblin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
+          "dependencies": {
+            "BTCPayServer.Lightning.Common": {
+              "target": "Package",
+              "version": "[1.5.2, )"
+            },
+            "Microsoft.SourceLink.GitHub": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "NBitcoin": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "NETStandard.Library": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.106/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Common/BTCPayServer.Common.csproj": {
+      "version": "2.3.4",
+      "restore": {
+        "projectUniqueName": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Common/BTCPayServer.Common.csproj",
+        "projectName": "BTCPayServer.Common",
+        "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Common/BTCPayServer.Common.csproj",
+        "packagesPath": "/Users/comradeblin/.nuget/packages/",
+        "outputPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Common/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/NuGet.Config",
+          "/Users/comradeblin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "NBXplorer.Client": {
+              "target": "Package",
+              "version": "[5.0.5, )"
+            },
+            "NicolasDorier.StandardConfiguration": {
+              "target": "Package",
+              "version": "[2.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.106/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Data/BTCPayServer.Data.csproj": {
+      "version": "2.3.4",
+      "restore": {
+        "projectUniqueName": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Data/BTCPayServer.Data.csproj",
+        "projectName": "BTCPayServer.Data",
+        "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Data/BTCPayServer.Data.csproj",
+        "packagesPath": "/Users/comradeblin/.nuget/packages/",
+        "outputPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Data/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/NuGet.Config",
+          "/Users/comradeblin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Abstractions/BTCPayServer.Abstractions.csproj": {
+                "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Abstractions/BTCPayServer.Abstractions.csproj"
+              },
+              "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/BTCPayServer.Client.csproj": {
+                "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/BTCPayServer.Client.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.35, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "NBitcoin.Altcoins": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.106/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Rating/BTCPayServer.Rating.csproj": {
+      "version": "2.3.4",
+      "restore": {
+        "projectUniqueName": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Rating/BTCPayServer.Rating.csproj",
+        "projectName": "BTCPayServer.Rating",
+        "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Rating/BTCPayServer.Rating.csproj",
+        "packagesPath": "/Users/comradeblin/.nuget/packages/",
+        "outputPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Rating/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/NuGet.Config",
+          "/Users/comradeblin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "DigitalRuby.ExchangeSharp": {
+              "target": "Package",
+              "version": "[1.2.0, )"
+            },
+            "Microsoft.AspNet.WebApi.Client": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.CodeAnalysis.CSharp": {
+              "target": "Package",
+              "version": "[4.10.0, )"
+            },
+            "NBitcoin": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[8.0.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.106/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer/BTCPayServer.csproj": {
+      "version": "2.3.4",
+      "restore": {
+        "projectUniqueName": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer/BTCPayServer.csproj",
+        "projectName": "BTCPayServer",
+        "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer/BTCPayServer.csproj",
+        "packagesPath": "/Users/comradeblin/.nuget/packages/",
+        "outputPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/NuGet.Config",
+          "/Users/comradeblin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Abstractions/BTCPayServer.Abstractions.csproj": {
+                "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Abstractions/BTCPayServer.Abstractions.csproj"
+              },
+              "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/BTCPayServer.Client.csproj": {
+                "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Client/BTCPayServer.Client.csproj"
+              },
+              "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Common/BTCPayServer.Common.csproj": {
+                "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Common/BTCPayServer.Common.csproj"
+              },
+              "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Data/BTCPayServer.Data.csproj": {
+                "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Data/BTCPayServer.Data.csproj"
+              },
+              "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Rating/BTCPayServer.Rating.csproj": {
+                "projectPath": "/Users/comradeblin/Projects/BTCPay-VAT/btcpayserver/BTCPayServer.Rating/BTCPayServer.Rating.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU1701"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "BIP78.Sender": {
+              "target": "Package",
+              "version": "[0.2.5, )"
+            },
+            "BTCPayServer.Hwi": {
+              "target": "Package",
+              "version": "[2.0.6, )"
+            },
+            "BTCPayServer.Lightning.All": {
+              "target": "Package",
+              "version": "[1.6.11, )"
+            },
+            "BTCPayServer.NTag424": {
+              "target": "Package",
+              "version": "[1.0.25, )"
+            },
+            "CsvHelper": {
+              "target": "Package",
+              "version": "[32.0.3, )"
+            },
+            "Fido2": {
+              "target": "Package",
+              "version": "[3.0.1, )"
+            },
+            "Fido2.AspNet": {
+              "target": "Package",
+              "version": "[3.0.1, )"
+            },
+            "JetBrains.Annotations.Sources": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2025.2.2, )"
+            },
+            "LNURL": {
+              "target": "Package",
+              "version": "[0.0.36, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.8.0, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[8.0.11, )"
+            },
+            "NBitcoin": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "NBitpayClient": {
+              "target": "Package",
+              "version": "[1.0.0.39, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "NicolasDorier.CommandLine": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "NicolasDorier.CommandLine.Configuration": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "NicolasDorier.RateLimits": {
+              "target": "Package",
+              "version": "[1.2.3, )"
+            },
+            "QRCoder": {
+              "target": "Package",
+              "version": "[1.6.0, )"
+            },
+            "SSH.NET": {
+              "target": "Package",
+              "version": "[2023.0.0, )"
+            },
+            "Serilog": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[5.0.1-dev-00968, )"
+            },
+            "System.IO.Pipelines": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "System.Text.RegularExpressions": {
+              "target": "Package",
+              "version": "[4.3.1, )"
+            },
+            "TwentyTwenty.Storage": {
+              "target": "Package",
+              "version": "[2.24.2, )"
+            },
+            "TwentyTwenty.Storage.Amazon": {
+              "target": "Package",
+              "version": "[2.24.2, )"
+            },
+            "TwentyTwenty.Storage.Azure": {
+              "target": "Package",
+              "version": "[2.24.2, )"
+            },
+            "TwentyTwenty.Storage.Google": {
+              "target": "Package",
+              "version": "[2.24.2, )"
+            },
+            "TwentyTwenty.Storage.Local": {
+              "target": "Package",
+              "version": "[2.24.2, )"
+            },
+            "YamlDotNet": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.106/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

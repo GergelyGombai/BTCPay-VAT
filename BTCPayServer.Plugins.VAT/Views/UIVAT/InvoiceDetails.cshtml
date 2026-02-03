@@ -1,0 +1,126 @@
+@model VATInvoiceDetailsViewModel
+@{
+    ViewData["Title"] = "VAT Invoice Details";
+    Layout = "_LayoutSimple";
+}
+
+<div class="sticky-header">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="UIStores" asp-action="Dashboard" asp-route-storeId="@Model.StoreId">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Settings" asp-route-storeId="@Model.StoreId">VAT Settings</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Invoice @Model.Record.InvoiceId</li>
+        </ol>
+    </nav>
+    <h2>@ViewData["Title"]</h2>
+</div>
+
+<div class="row">
+    <div class="col-xxl-constrain">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Invoice VAT Details</h5>
+                <span class="badge bg-@(Model.Record.ReverseChargeApplied ? "warning" : "success")">
+                    @(Model.Record.ReverseChargeApplied ? "Reverse Charge" : Model.Record.ModeApplied.ToString())
+                </span>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Invoice ID</dt>
+                    <dd class="col-sm-8"><code>@Model.Record.InvoiceId</code></dd>
+
+                    <dt class="col-sm-4">Created</dt>
+                    <dd class="col-sm-8">@Model.Record.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss") UTC</dd>
+
+                    <dt class="col-sm-4">Customer Country</dt>
+                    <dd class="col-sm-8">@Model.CountryName (@Model.Record.CustomerCountry)</dd>
+
+                    @if (!string.IsNullOrEmpty(Model.Record.CustomerVATNumber))
+                    {
+                        <dt class="col-sm-4">Customer VAT Number</dt>
+                        <dd class="col-sm-8"><code>@Model.Record.CustomerVATNumber</code></dd>
+                    }
+
+                    <dt class="col-sm-4">VAT Mode Applied</dt>
+                    <dd class="col-sm-8">@Model.Record.ModeApplied</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Amount Breakdown</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm mb-0">
+                    <tbody>
+                        <tr>
+                            <td>Net Amount</td>
+                            <td class="text-end">@Model.Record.NetAmount.ToString("N2") @Model.Record.Currency</td>
+                        </tr>
+                        <tr>
+                            <td>VAT Rate</td>
+                            <td class="text-end">@Model.Record.VATRate.ToString("N1")%</td>
+                        </tr>
+                        <tr class="text-primary">
+                            <td><strong>VAT Amount</strong></td>
+                            <td class="text-end"><strong>@Model.Record.VATAmount.ToString("N2") @Model.Record.Currency</strong></td>
+                        </tr>
+                        <tr class="table-light">
+                            <td><strong>Gross Amount</strong></td>
+                            <td class="text-end"><strong>@Model.Record.GrossAmount.ToString("N2") @Model.Record.Currency</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @if (Model.Record.ReverseChargeApplied)
+                {
+                    <div class="alert alert-warning mt-3 mb-0">
+                        <strong>Reverse Charge Applied:</strong> This is a B2B transaction with a validated EU VAT number.
+                        The customer is responsible for reporting VAT in their country.
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (Model.Record.Evidence.Any())
+        {
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Location Evidence</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Country</th>
+                                <th>Confidence</th>
+                                <th>Collected</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var evidence in Model.Record.Evidence)
+                            {
+                                <tr>
+                                    <td>@evidence.Type</td>
+                                    <td><code>@evidence.CountryCode</code></td>
+                                    <td>@((evidence.Confidence * 100).ToString("N0"))%</td>
+                                    <td>@evidence.CollectedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+        <div class="mt-4">
+            <a asp-action="Reports" asp-route-storeId="@Model.StoreId" class="btn btn-secondary">Back to Reports</a>
+        </div>
+    </div>
+</div>
