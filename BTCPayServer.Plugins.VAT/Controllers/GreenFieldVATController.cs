@@ -1,11 +1,15 @@
 using BTCPayServer.Abstractions.Constants;
+using BTCPayServer.Abstractions.Extensions;
 using BTCPayServer.Client;
+using BTCPayServer.Client.Models;
+using BTCPayServer.Controllers;
 using BTCPayServer.Plugins.VAT.Models.Request;
 using BTCPayServer.Plugins.VAT.Models.Response;
 using BTCPayServer.Plugins.VAT.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace BTCPayServer.Plugins.VAT.Controllers;
 
@@ -17,15 +21,18 @@ public class GreenFieldVATController : ControllerBase
     private readonly IVATCalculationService _vatService;
     private readonly VATRateProvider _rateProvider;
     private readonly VIESValidationService _viesService;
+    private readonly UIInvoiceController _invoiceController;
 
     public GreenFieldVATController(
         IVATCalculationService vatService,
         VATRateProvider rateProvider,
-        VIESValidationService viesService)
+        VIESValidationService viesService,
+        UIInvoiceController invoiceController)
     {
         _vatService = vatService;
         _rateProvider = rateProvider;
         _viesService = viesService;
+        _invoiceController = invoiceController;
     }
 
     /// <summary>
@@ -137,9 +144,111 @@ public class GreenFieldVATController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var result = await _vatService.CreateInvoiceWithVATAsync(storeId, request, cancellationToken);
+        // Get store data
+        var store = HttpContext.GetStoreData();
+        if (store == null)
+        {
+            return NotFound(new { message = "Store not found" });
+        }
 
-        return CreatedAtAction(nameof(GetInvoiceVATDetails), new { storeId, invoiceId = result.InvoiceId }, result);
+        // Calculate VAT
+        var vatResult = await _vatService.CalculateVATAsync(
+            storeId,
+            request.Amount,
+            request.Currency,
+            request.CustomerCountry,
+            request.CustomerVATNumber,
+            cancellationToken);
+
+        // Build metadata with VAT information
+        var metadata = request.Metadata != null
+            ? JObject.FromObject(request.Metadata)
+            : new JObject();
+
+        metadata["vatData"] = JObject.FromObject(new
+        {
+            netAmount = vatResult.NetAmount,
+            vatRate = vatResult.VATRate,
+            vatAmount = vatResult.VATAmount,
+            grossAmount = vatResult.GrossAmount,
+            customerCountry = vatResult.CountryCode,
+            reverseCharge = vatResult.ReverseChargeApplied,
+            customerVATNumber = vatResult.CustomerVATNumber,
+            modeApplied = vatResult.ModeApplied.ToString()
+        });
+
+        // Set buyer country for BTCPay's built-in reporting
+        metadata["buyerCountry"] = request.CustomerCountry;
+
+        // Create the BTCPay invoice request
+        var invoiceRequest = new CreateInvoiceRequest
+        {
+            Amount = vatResult.GrossAmount,
+            Currency = request.Currency,
+            Metadata = metadata,
+            Checkout = new CreateInvoiceRequest.CheckoutOptions
+            {
+                Expiration = request.Checkout?.ExpirationMinutes != null
+                    ? TimeSpan.FromMinutes(request.Checkout.ExpirationMinutes.Value)
+                    : null,
+                PaymentMethods = request.Checkout?.PaymentMethods
+            },
+            Receipt = new InvoiceDataBase.ReceiptOptions
+            {
+                Enabled = true
+            }
+        };
+
+        // Add buyer info if provided
+        if (!string.IsNullOrEmpty(request.BuyerEmail))
+        {
+            metadata["buyerEmail"] = request.BuyerEmail;
+        }
+        if (!string.IsNullOrEmpty(request.BuyerName))
+        {
+            metadata["buyerName"] = request.BuyerName;
+        }
+        if (!string.IsNullOrEmpty(request.OrderId))
+        {
+            metadata["orderId"] = request.OrderId;
+        }
+
+        // Create the invoice via BTCPay's invoice controller
+        try
+        {
+            var invoice = await _invoiceController.CreateInvoiceCoreRaw(
+                invoiceRequest,
+                store,
+                Request.GetAbsoluteRoot(),
+                additionalTags: null,
+                cancellationToken);
+
+            // Save VAT record with real invoice ID
+            await _vatService.SaveVATRecordAsync(
+                invoice.Id,
+                storeId,
+                vatResult,
+                request.CustomerCountry,
+                request.CustomerVATNumber,
+                cancellationToken);
+
+            return CreatedAtAction(
+                nameof(GetInvoiceVATDetails),
+                new { storeId, invoiceId = invoice.Id },
+                new VATInvoiceResult
+                {
+                    InvoiceId = invoice.Id,
+                    CheckoutUrl = $"/i/{invoice.Id}",
+                    Status = invoice.Status.ToString(),
+                    VAT = vatResult,
+                    CreatedAt = invoice.InvoiceTime,
+                    ExpiresAt = invoice.ExpirationTime
+                });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = $"Failed to create invoice: {ex.Message}" });
+        }
     }
 
     /// <summary>

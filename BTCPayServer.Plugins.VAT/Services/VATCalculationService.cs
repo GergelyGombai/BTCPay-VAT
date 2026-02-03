@@ -113,39 +113,44 @@ public class VATCalculationService : IVATCalculationService
         };
     }
 
-    public async Task<VATInvoiceResult> CreateInvoiceWithVATAsync(
+    public Task<VATInvoiceResult> CreateInvoiceWithVATAsync(
         string storeId,
         CreateVATInvoiceRequest request,
         CancellationToken cancellationToken = default)
     {
-        // Calculate VAT
-        var vatResult = await CalculateVATAsync(
-            storeId,
-            request.Amount,
-            request.Currency,
-            request.CustomerCountry,
-            request.CustomerVATNumber,
-            cancellationToken);
+        // This method is deprecated - invoice creation is now handled in the controller
+        // using BTCPay's UIInvoiceController.CreateInvoiceCoreRaw
+        throw new NotImplementedException("Use the controller's CreateInvoiceWithVAT endpoint instead");
+    }
 
-        // Create the invoice record
+    public async Task SaveVATRecordAsync(
+        string invoiceId,
+        string storeId,
+        VATCalculationResult vatResult,
+        string customerCountry,
+        string? customerVATNumber,
+        CancellationToken cancellationToken = default)
+    {
         var invoiceRecord = new VATInvoiceRecord
         {
-            InvoiceId = Guid.NewGuid().ToString(), // Will be replaced with actual BTCPay invoice ID
+            InvoiceId = invoiceId,
             StoreId = storeId,
-            CustomerCountry = request.CustomerCountry,
+            CustomerCountry = customerCountry,
             VATRate = vatResult.VATRate,
             NetAmount = vatResult.NetAmount,
             VATAmount = vatResult.VATAmount,
             GrossAmount = vatResult.GrossAmount,
-            Currency = request.Currency,
+            Currency = vatResult.Currency,
             ReverseChargeApplied = vatResult.ReverseChargeApplied,
-            CustomerVATNumber = vatResult.CustomerVATNumber,
+            CustomerVATNumber = customerVATNumber,
             ModeApplied = vatResult.ModeApplied,
             EvidenceJson = JsonConvert.SerializeObject(new
             {
-                customerCountry = request.CustomerCountry,
-                customerVATNumber = request.CustomerVATNumber,
-                calculatedAt = DateTimeOffset.UtcNow
+                customerCountry,
+                customerVATNumber,
+                calculatedAt = DateTimeOffset.UtcNow,
+                vatCountryApplied = vatResult.CountryCode,
+                vatRate = vatResult.VATRate
             })
         };
 
@@ -153,25 +158,13 @@ public class VATCalculationService : IVATCalculationService
         invoiceRecord.Evidence.Add(new VATEvidence
         {
             Type = VATEvidenceType.BillingAddress,
-            CountryCode = request.CustomerCountry,
+            CountryCode = customerCountry,
             Confidence = 1.0m,
             CollectedAt = DateTimeOffset.UtcNow
         });
 
         _dbContext.VATInvoiceRecords.Add(invoiceRecord);
         await _dbContext.SaveChangesAsync(cancellationToken);
-
-        // Note: In actual implementation, this would call BTCPay's invoice API
-        // and update the invoiceRecord.InvoiceId with the real ID
-        return new VATInvoiceResult
-        {
-            InvoiceId = invoiceRecord.InvoiceId,
-            CheckoutUrl = $"/i/{invoiceRecord.InvoiceId}",
-            Status = "New",
-            VAT = vatResult,
-            CreatedAt = invoiceRecord.CreatedAt,
-            ExpiresAt = invoiceRecord.CreatedAt.AddMinutes(request.Checkout?.ExpirationMinutes ?? 15)
-        };
     }
 
     public async Task<VATInvoiceRecord?> GetVATRecordAsync(
