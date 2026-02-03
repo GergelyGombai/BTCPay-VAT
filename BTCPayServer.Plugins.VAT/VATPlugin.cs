@@ -1,4 +1,3 @@
-using BTCPayServer;
 using BTCPayServer.Abstractions.Contracts;
 using BTCPayServer.Abstractions.Models;
 using BTCPayServer.Plugins.VAT.Data;
@@ -19,8 +18,6 @@ public class VATPlugin : BaseBTCPayServerPlugin
 
     public override void Execute(IServiceCollection services)
     {
-        services.AddUIExtension("header-nav", "VAT/VATNav");
-
         services.AddDbContext<VATDbContext>((provider, builder) =>
         {
             var dbOptions = provider.GetRequiredService<IOptions<DatabaseOptions>>();

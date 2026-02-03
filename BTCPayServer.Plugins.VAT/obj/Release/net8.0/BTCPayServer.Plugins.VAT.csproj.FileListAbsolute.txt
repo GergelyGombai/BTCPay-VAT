@@ -40,3 +40,4 @@
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/refint/BTCPayServer.Plugins.VAT.dll
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/BTCPayServer.Plugins.VAT.pdb
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/ref/BTCPayServer.Plugins.VAT.dll
+/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/BTCPayServer.Plugins.VAT.sourcelink.json
