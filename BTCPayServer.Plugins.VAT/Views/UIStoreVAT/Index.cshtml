@@ -1,0 +1,130 @@
+@using BTCPayServer.Abstractions.Extensions
+@model VATSettingsViewModel
+@{
+    ViewData.SetActivePage("VAT", "BTCPayServer.Plugins.VAT", "VAT Settings");
+}
+
+<form method="post" asp-action="Index" asp-route-storeId="@Model.StoreId">
+    <div class="sticky-header">
+        <h2>@ViewData["Title"]</h2>
+        <button type="submit" class="btn btn-primary" id="Save">Save</button>
+    </div>
+
+    <partial name="_StatusMessage" />
+
+    <div class="row">
+        <div class="col-xl-8 col-xxl-constrain">
+            <div class="form-group mb-4">
+                <div class="d-flex align-items-center">
+                    <input asp-for="Enabled" type="checkbox" class="btcpay-toggle me-3" />
+                    <div>
+                        <label asp-for="Enabled" class="form-label mb-0">Enable VAT calculation</label>
+                        <span class="text-muted d-block">Enable VAT calculation for invoices created via the VAT API</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="Mode" class="form-label" data-required>VAT Mode</label>
+                <select asp-for="Mode" class="form-select w-auto">
+                    <option value="@VATMode.Fixed">Fixed - Single country VAT rate</option>
+                    <option value="@VATMode.OSS">OSS - Customer location-based VAT</option>
+                </select>
+                <span asp-validation-for="Mode" class="text-danger"></span>
+                <div class="text-muted mt-1">
+                    <strong>Fixed:</strong> Always charges your home country's VAT rate.<br />
+                    <strong>OSS:</strong> Charges VAT based on the customer's EU country (One-Stop Shop).
+                </div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="HomeCountry" class="form-label" data-required>Home Country</label>
+                <select asp-for="HomeCountry" class="form-select w-auto">
+                    @foreach (var country in Model.EUCountries)
+                    {
+                        <option value="@country.Code">@country.Name (@country.Code) - @country.StandardRate%</option>
+                    }
+                </select>
+                <span asp-validation-for="HomeCountry" class="text-danger"></span>
+                <div class="text-muted mt-1">Your business registration country</div>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="VATNumber" class="form-label">VAT Registration Number</label>
+                <input asp-for="VATNumber" class="form-control" style="max-width:300px" placeholder="e.g., DE123456789" />
+                <span asp-validation-for="VATNumber" class="text-danger"></span>
+                <div class="text-muted mt-1">Your business VAT identification number</div>
+            </div>
+
+            <div class="form-group mb-4">
+                <div class="form-check">
+                    <input asp-for="ValidateVIES" type="checkbox" class="form-check-input" />
+                    <label asp-for="ValidateVIES" class="form-check-label">Validate B2B VAT numbers via VIES</label>
+                </div>
+                <div class="text-muted">Valid B2B transactions will have reverse charge applied (0% VAT)</div>
+            </div>
+
+            <div class="form-group mb-4">
+                <div class="form-check">
+                    <input asp-for="BelowSmallBusinessThreshold" type="checkbox" class="form-check-input" />
+                    <label asp-for="BelowSmallBusinessThreshold" class="form-check-label">Below small business threshold (Kleinunternehmerregelung)</label>
+                </div>
+                <div class="text-muted">If enabled, no VAT will be charged</div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row mt-4">
+    <div class="col-xl-8 col-xxl-constrain">
+        <h4 class="mb-3">Quick Links</h4>
+        <a asp-action="Reports" asp-route-storeId="@Model.StoreId" class="btn btn-secondary">
+            <span class="fa fa-chart-bar me-1"></span> View VAT Reports
+        </a>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-xl-8 col-xxl-constrain">
+        <h4 class="mb-3">API Endpoints</h4>
+        <p class="text-muted">Use these endpoints to create invoices with automatic VAT calculation:</p>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Endpoint</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>POST</code></td>
+                        <td><code>/api/v1/stores/{storeId}/vat/calculate</code></td>
+                        <td>Preview VAT calculation</td>
+                    </tr>
+                    <tr>
+                        <td><code>POST</code></td>
+                        <td><code>/api/v1/stores/{storeId}/vat/invoices</code></td>
+                        <td>Create invoice with VAT</td>
+                    </tr>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/v1/stores/{storeId}/vat/reports</code></td>
+                        <td>Generate VAT report</td>
+                    </tr>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/v1/vat/rates</code></td>
+                        <td>Get all EU VAT rates</td>
+                    </tr>
+                    <tr>
+                        <td><code>GET</code></td>
+                        <td><code>/api/v1/vat/validate/{vatNumber}</code></td>
+                        <td>Validate VAT number via VIES</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

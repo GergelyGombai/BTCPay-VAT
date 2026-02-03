@@ -1,0 +1,10 @@
+@{
+    var storeId = ViewContext.RouteData.Values["storeId"]?.ToString();
+}
+
+@if (!string.IsNullOrEmpty(storeId))
+{
+    <a layout-menu-item="VAT" asp-controller="UIStoreVAT" asp-action="Index" asp-route-storeId="@storeId" id="StoreNav-VAT">
+        <span class="me-2 fa fa-percent"></span> VAT
+    </a>
+}

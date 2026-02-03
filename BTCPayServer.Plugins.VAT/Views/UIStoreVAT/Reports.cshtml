@@ -1,0 +1,133 @@
+@using BTCPayServer.Abstractions.Extensions
+@model VATReportsViewModel
+@{
+    ViewData.SetActivePage("VAT", "BTCPayServer.Plugins.VAT", "VAT Reports");
+}
+
+<div class="sticky-header">
+    <h2>@ViewData["Title"]</h2>
+</div>
+
+<partial name="_StatusMessage" />
+
+<form method="get" class="mb-4">
+    <div class="d-flex flex-wrap align-items-end gap-3">
+        <div class="form-group">
+            <label class="form-label">Start Date</label>
+            <input type="date" name="startDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" class="form-control" style="width:auto" />
+        </div>
+        <div class="form-group">
+            <label class="form-label">End Date</label>
+            <input type="date" name="endDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" class="form-control" style="width:auto" />
+        </div>
+        <button type="submit" class="btn btn-primary">Generate Report</button>
+        <a asp-action="ExportReport"
+           asp-route-storeId="@Model.StoreId"
+           asp-route-startDate="@Model.StartDate.ToString("yyyy-MM-dd")"
+           asp-route-endDate="@Model.EndDate.ToString("yyyy-MM-dd")"
+           class="btn btn-secondary">
+            <span class="fa fa-download me-1"></span> Export CSV
+        </a>
+    </div>
+</form>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="widget">
+            <header>
+                <h5>Summary</h5>
+            </header>
+            <div class="content">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="text-muted small">Total Invoices</div>
+                        <div class="fs-3 fw-semibold">@Model.Report.InvoiceCount</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-muted small">Total Net</div>
+                        <div class="fs-3 fw-semibold">@Model.Report.TotalNetAmount.ToString("N2")</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-muted small">Total VAT</div>
+                        <div class="fs-3 fw-semibold text-primary">@Model.Report.TotalVATAmount.ToString("N2")</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-muted small">Total Gross</div>
+                        <div class="fs-3 fw-semibold">@Model.Report.TotalGrossAmount.ToString("N2")</div>
+                    </div>
+                </div>
+                @if (Model.Report.ReverseChargeCount > 0)
+                {
+                    <div class="alert alert-info mt-3 mb-0">
+                        <strong>Reverse Charge Transactions:</strong> @Model.Report.ReverseChargeCount invoices (Net: @Model.Report.ReverseChargeTotalNet.ToString("N2"))
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="widget">
+            <header>
+                <h5>By Country</h5>
+            </header>
+            <div class="content">
+                @if (Model.Report.Items.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Country</th>
+                                    <th class="text-end">Invoices</th>
+                                    <th class="text-end">Net Amount</th>
+                                    <th class="text-end">VAT Amount</th>
+                                    <th class="text-end">Gross Amount</th>
+                                    <th class="text-end">Avg Rate</th>
+                                    <th class="text-end">Reverse Charge</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Report.Items)
+                                {
+                                    <tr>
+                                        <td>@item.GroupLabel <span class="text-muted">(@item.CountryCode)</span></td>
+                                        <td class="text-end">@item.InvoiceCount</td>
+                                        <td class="text-end">@item.NetAmount.ToString("N2")</td>
+                                        <td class="text-end text-primary fw-semibold">@item.VATAmount.ToString("N2")</td>
+                                        <td class="text-end">@item.GrossAmount.ToString("N2")</td>
+                                        <td class="text-end">@item.AverageVATRate.ToString("N1")%</td>
+                                        <td class="text-end">@item.ReverseChargeCount</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="fw-semibold">
+                                <tr>
+                                    <td>Total</td>
+                                    <td class="text-end">@Model.Report.InvoiceCount</td>
+                                    <td class="text-end">@Model.Report.TotalNetAmount.ToString("N2")</td>
+                                    <td class="text-end text-primary">@Model.Report.TotalVATAmount.ToString("N2")</td>
+                                    <td class="text-end">@Model.Report.TotalGrossAmount.ToString("N2")</td>
+                                    <td class="text-end">-</td>
+                                    <td class="text-end">@Model.Report.ReverseChargeCount</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted text-center py-4 mb-0">No VAT transactions found for the selected period.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="Index" asp-route-storeId="@Model.StoreId" class="btn btn-secondary">
+        <span class="fa fa-arrow-left me-1"></span> Back to Settings
+    </a>
+</div>
