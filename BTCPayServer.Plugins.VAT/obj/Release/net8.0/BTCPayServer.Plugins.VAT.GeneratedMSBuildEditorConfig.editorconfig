@@ -16,6 +16,28 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = BTCPayServer.Plugins.VAT
+build_property.RootNamespace = BTCPayServer.Plugins.VAT
 build_property.ProjectDir = /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT
+build_property._RazorSourceGeneratorDebug = 
+
+[/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/Views/Shared/VATNav.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL1ZBVE5hdi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/Views/UIStoreVAT/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVUlTdG9yZVZBVC9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/Views/UIStoreVAT/Reports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVUlTdG9yZVZBVC9SZXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 

@@ -1,3 +1,4 @@
+using BTCPayServer;
 using BTCPayServer.Abstractions.Contracts;
 using BTCPayServer.Abstractions.Models;
 using BTCPayServer.Plugins.VAT.Data;
@@ -19,6 +20,9 @@ public class VATPlugin : BaseBTCPayServerPlugin
 
     public override void Execute(IServiceCollection services)
     {
+        // Register store nav extension
+        services.AddUIExtension("store-nav", "VAT/VATNav");
+
         services.AddDbContext<VATDbContext>((provider, builder) =>
         {
             var dbOptions = provider.GetRequiredService<IOptions<DatabaseOptions>>();
@@ -52,13 +56,12 @@ public class VATPluginMigrationRunner : IHostedService
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<VATDbContext>();
 
-            // Create schema and tables using raw SQL
             await context.Database.ExecuteSqlRawAsync(CreateSchemaSql, cancellationToken);
-            _logger.LogInformation("VAT Plugin database schema created successfully");
+            _logger.LogInformation("VAT Plugin database schema initialized");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to create VAT Plugin database schema");
+            _logger.LogError(ex, "Failed to initialize VAT Plugin database schema");
         }
     }
 
