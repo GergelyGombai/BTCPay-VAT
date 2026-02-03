@@ -53,7 +53,7 @@ public class UIStoreVATController : Controller
                 .ToList()
         };
 
-        return View(viewModel);
+        return View("/Plugins/VAT/Views/UIStoreVAT/Index.cshtml", viewModel);
     }
 
     [HttpPost("")]
@@ -76,7 +76,7 @@ public class UIStoreVATController : Controller
                 })
                 .OrderBy(c => c.Name)
                 .ToList();
-            return View(model);
+            return View("/Plugins/VAT/Views/UIStoreVAT/Index.cshtml", model);
         }
 
         var request = new UpdateVATSettingsRequest
@@ -112,7 +112,7 @@ public class UIStoreVATController : Controller
             Report = report
         };
 
-        return View(viewModel);
+        return View("/Plugins/VAT/Views/UIStoreVAT/Reports.cshtml", viewModel);
     }
 
     [HttpGet("reports/export")]
