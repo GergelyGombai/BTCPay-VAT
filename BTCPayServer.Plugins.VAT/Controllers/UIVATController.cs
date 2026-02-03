@@ -2,6 +2,7 @@ using BTCPayServer.Abstractions.Constants;
 using BTCPayServer.Client;
 using BTCPayServer.Plugins.VAT.Data.Models;
 using BTCPayServer.Plugins.VAT.Models.Request;
+using BTCPayServer.Plugins.VAT.Models.Response;
 using BTCPayServer.Plugins.VAT.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,62 +32,51 @@ public class UIVATController : Controller
     public async Task<IActionResult> Settings(string storeId)
     {
         var settings = await _vatService.GetStoreSettingsAsync(storeId);
+        var rateInfo = settings != null ? _rateProvider.GetRateInfo(settings.HomeCountry) : null;
 
-        var viewModel = new VATSettingsViewModel
+        return Ok(new VATSettingsResponse
         {
             StoreId = storeId,
             Mode = settings?.Mode ?? VATMode.Fixed,
-            HomeCountry = settings?.HomeCountry ?? "DE",
+            HomeCountry = settings?.HomeCountry ?? "",
+            HomeCountryName = rateInfo?.CountryName ?? "",
             VATNumber = settings?.VATNumber,
             Enabled = settings?.Enabled ?? false,
             ValidateVIES = settings?.ValidateVIES ?? true,
             BelowSmallBusinessThreshold = settings?.BelowSmallBusinessThreshold ?? false,
-            EUCountries = _rateProvider.GetAllRates()
-                .Select(kvp => new EUCountryOption
-                {
-                    Code = kvp.Key,
-                    Name = kvp.Value.CountryName,
-                    StandardRate = kvp.Value.StandardRate
-                })
-                .OrderBy(c => c.Name)
-                .ToList()
-        };
-
-        return View(viewModel);
+            HomeCountryVATRate = rateInfo?.StandardRate ?? 0
+        });
     }
 
     [HttpPost]
     [Authorize(Policy = Policies.CanModifyStoreSettings)]
-    public async Task<IActionResult> Settings(string storeId, VATSettingsViewModel model)
+    public async Task<IActionResult> Settings(string storeId, [FromBody] UpdateVATSettingsRequest request)
     {
         if (!ModelState.IsValid)
         {
-            model.EUCountries = _rateProvider.GetAllRates()
-                .Select(kvp => new EUCountryOption
-                {
-                    Code = kvp.Key,
-                    Name = kvp.Value.CountryName,
-                    StandardRate = kvp.Value.StandardRate
-                })
-                .OrderBy(c => c.Name)
-                .ToList();
-            return View(model);
+            return BadRequest(ModelState);
         }
 
-        var request = new UpdateVATSettingsRequest
+        if (!_rateProvider.IsEUCountry(request.HomeCountry))
         {
-            Mode = model.Mode,
-            HomeCountry = model.HomeCountry,
-            VATNumber = model.VATNumber,
-            Enabled = model.Enabled,
-            ValidateVIES = model.ValidateVIES,
-            BelowSmallBusinessThreshold = model.BelowSmallBusinessThreshold
-        };
+            return BadRequest(new { message = $"'{request.HomeCountry}' is not a valid EU country code" });
+        }
 
-        await _vatService.UpdateStoreSettingsAsync(storeId, request);
+        var settings = await _vatService.UpdateStoreSettingsAsync(storeId, request);
+        var rateInfo = _rateProvider.GetRateInfo(settings.HomeCountry);
 
-        TempData["SuccessMessage"] = "VAT settings saved successfully.";
-        return RedirectToAction(nameof(Settings), new { storeId });
+        return Ok(new VATSettingsResponse
+        {
+            StoreId = settings.StoreId,
+            Mode = settings.Mode,
+            HomeCountry = settings.HomeCountry,
+            HomeCountryName = rateInfo?.CountryName ?? settings.HomeCountry,
+            VATNumber = settings.VATNumber,
+            Enabled = settings.Enabled,
+            ValidateVIES = settings.ValidateVIES,
+            BelowSmallBusinessThreshold = settings.BelowSmallBusinessThreshold,
+            HomeCountryVATRate = rateInfo?.StandardRate ?? 0
+        });
     }
 
     [HttpGet("reports")]
@@ -102,16 +92,32 @@ public class UIVATController : Controller
 
         var report = await _reportingService.GenerateReportAsync(storeId, start, end, grouping);
 
-        var viewModel = new VATReportsViewModel
+        return Ok(new
         {
-            StoreId = storeId,
-            StartDate = start,
-            EndDate = end,
-            Grouping = grouping,
-            Report = report
-        };
-
-        return View(viewModel);
+            storeId,
+            startDate = start,
+            endDate = end,
+            grouping = grouping.ToString(),
+            summary = new
+            {
+                totalNetAmount = report.TotalNetAmount,
+                totalVATAmount = report.TotalVATAmount,
+                totalGrossAmount = report.TotalGrossAmount,
+                invoiceCount = report.InvoiceCount,
+                reverseChargeCount = report.ReverseChargeCount
+            },
+            items = report.Items.Select(i => new
+            {
+                groupKey = i.GroupKey,
+                groupLabel = i.GroupLabel,
+                countryCode = i.CountryCode,
+                netAmount = i.NetAmount,
+                vatAmount = i.VATAmount,
+                grossAmount = i.GrossAmount,
+                invoiceCount = i.InvoiceCount,
+                averageVATRate = i.AverageVATRate
+            })
+        });
     }
 
     [HttpGet("reports/export")]
@@ -140,51 +146,24 @@ public class UIVATController : Controller
 
         if (record == null)
         {
-            return NotFound();
+            return NotFound(new { message = "VAT record not found" });
         }
 
-        var viewModel = new VATInvoiceDetailsViewModel
+        return Ok(new
         {
-            StoreId = storeId,
-            Record = record,
-            CountryName = _rateProvider.GetRateInfo(record.CustomerCountry)?.CountryName ?? record.CustomerCountry
-        };
-
-        return View(viewModel);
+            invoiceId = record.InvoiceId,
+            storeId = record.StoreId,
+            customerCountry = record.CustomerCountry,
+            customerCountryName = _rateProvider.GetRateInfo(record.CustomerCountry)?.CountryName ?? record.CustomerCountry,
+            vatRate = record.VATRate,
+            netAmount = record.NetAmount,
+            vatAmount = record.VATAmount,
+            grossAmount = record.GrossAmount,
+            currency = record.Currency,
+            reverseChargeApplied = record.ReverseChargeApplied,
+            customerVATNumber = record.CustomerVATNumber,
+            modeApplied = record.ModeApplied.ToString(),
+            createdAt = record.CreatedAt
+        });
     }
-}
-
-public class VATSettingsViewModel
-{
-    public string StoreId { get; set; } = string.Empty;
-    public VATMode Mode { get; set; }
-    public string HomeCountry { get; set; } = string.Empty;
-    public string? VATNumber { get; set; }
-    public bool Enabled { get; set; }
-    public bool ValidateVIES { get; set; }
-    public bool BelowSmallBusinessThreshold { get; set; }
-    public List<EUCountryOption> EUCountries { get; set; } = new();
-}
-
-public class EUCountryOption
-{
-    public string Code { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public decimal StandardRate { get; set; }
-}
-
-public class VATReportsViewModel
-{
-    public string StoreId { get; set; } = string.Empty;
-    public DateTimeOffset StartDate { get; set; }
-    public DateTimeOffset EndDate { get; set; }
-    public VATReportGrouping Grouping { get; set; }
-    public VATReport Report { get; set; } = new();
-}
-
-public class VATInvoiceDetailsViewModel
-{
-    public string StoreId { get; set; } = string.Empty;
-    public VATInvoiceRecord Record { get; set; } = new();
-    public string CountryName { get; set; } = string.Empty;
 }

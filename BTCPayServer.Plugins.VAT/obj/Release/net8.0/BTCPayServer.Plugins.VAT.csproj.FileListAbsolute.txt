@@ -2,7 +2,6 @@
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/bin/Release/net8.0/BTCPayServer.runtimeconfig.json
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/bin/Release/net8.0/BTCPayServer.staticwebassets.runtime.json
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/bin/Release/net8.0/BTCPayServer
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/bin/Release/net8.0/BTCPayServer.Plugins.VAT.staticwebassets.runtime.json
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/bin/Release/net8.0/BTCPayServer.Plugins.VAT.deps.json
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/bin/Release/net8.0/BTCPayServer.Plugins.VAT.dll
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/bin/Release/net8.0/BTCPayServer.Plugins.VAT.pdb
@@ -25,16 +24,6 @@
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/BTCPayServer.Plugins.VAT.AssemblyInfoInputs.cache
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/BTCPayServer.Plugins.VAT.AssemblyInfo.cs
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/BTCPayServer.Plugins.VAT.csproj.CoreCompileInputs.cache
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/BTCPayServer.Plugins.VAT.RazorAssemblyInfo.cache
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/BTCPayServer.Plugins.VAT.RazorAssemblyInfo.cs
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/staticwebassets.build.json
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/staticwebassets.development.json
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/staticwebassets/msbuild.BTCPayServer.Plugins.VAT.Microsoft.AspNetCore.StaticWebAssets.props
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/staticwebassets/msbuild.build.BTCPayServer.Plugins.VAT.props
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/staticwebassets/msbuild.buildMultiTargeting.BTCPayServer.Plugins.VAT.props
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/staticwebassets/msbuild.buildTransitive.BTCPayServer.Plugins.VAT.props
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/staticwebassets.pack.json
-/Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/scopedcss/bundle/BTCPayServer.Plugins.VAT.styles.css
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/BTCPayServer.Plugins.VAT.csproj.CopyComplete
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/BTCPayServer.Plugins.VAT.dll
 /Users/comradeblin/Projects/BTCPay-VAT/BTCPayServer.Plugins.VAT/obj/Release/net8.0/refint/BTCPayServer.Plugins.VAT.dll
