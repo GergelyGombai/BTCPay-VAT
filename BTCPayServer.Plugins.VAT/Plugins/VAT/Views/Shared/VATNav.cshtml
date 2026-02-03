@@ -1,10 +1,15 @@
+@using BTCPayServer.Client
+@model BTCPayServer.Components.MainNav.MainNavViewModel
 @{
-    var storeId = ViewContext.RouteData.Values["storeId"]?.ToString();
+    var store = Context.GetStoreData();
 }
 
-@if (!string.IsNullOrEmpty(storeId))
+@if (store != null)
 {
-    <a layout-menu-item="VAT" asp-controller="UIStoreVAT" asp-action="Index" asp-route-storeId="@storeId" id="StoreNav-VAT">
-        <span class="me-2 fa fa-percent"></span> VAT
-    </a>
+    <li class="nav-item" permission="@Policies.CanModifyStoreSettings">
+        <a layout-menu-item="VAT" asp-area="" asp-controller="UIStoreVAT" asp-action="Index" asp-route-storeId="@store.Id">
+            <span class="fa fa-percent"></span>
+            <span>VAT</span>
+        </a>
+    </li>
 }
