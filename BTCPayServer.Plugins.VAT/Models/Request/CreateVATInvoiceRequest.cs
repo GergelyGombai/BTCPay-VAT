@@ -75,4 +75,8 @@ public class VATInvoiceCheckoutOptions
     /// </summary>
     public string[]? PaymentMethods { get; set; }
 
+    /// <summary>
+    /// Whether to require the customer to provide their email
+    /// </summary>
+    public bool? RequiresRefundEmail { get; set; }
 }

@@ -47,15 +47,4 @@ public interface IVATCalculationService
         string storeId,
         UpdateVATSettingsRequest request,
         CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Saves a VAT record for an invoice
-    /// </summary>
-    Task SaveVATRecordAsync(
-        string invoiceId,
-        string storeId,
-        VATCalculationResult vatResult,
-        string customerCountry,
-        string? customerVATNumber,
-        CancellationToken cancellationToken = default);
 }
