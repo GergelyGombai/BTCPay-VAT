@@ -78,6 +78,9 @@
 <div class="row mt-4">
     <div class="col-xl-8 col-xxl-constrain">
         <h4 class="mb-3">Quick Links</h4>
+        <a asp-action="CreateInvoice" asp-route-storeId="@Model.StoreId" class="btn btn-primary me-2">
+            <span class="fa fa-plus me-1"></span> Create Invoice with VAT
+        </a>
         <a asp-action="Reports" asp-route-storeId="@Model.StoreId" class="btn btn-secondary">
             <span class="fa fa-chart-bar me-1"></span> View VAT Reports
         </a>

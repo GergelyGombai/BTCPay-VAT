@@ -1,0 +1,164 @@
+@using BTCPayServer.Abstractions.Extensions
+@model CreateVATInvoiceViewModel
+@{
+    ViewData.SetActivePage("VAT", "BTCPayServer.Plugins.VAT", "Create Invoice with VAT");
+}
+
+@section PageFootContent {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const countrySelect = document.getElementById("CustomerCountry");
+            const vatPreview = document.getElementById("vat-preview");
+            const amountInput = document.getElementById("Amount");
+
+            function updatePreview() {
+                const amount = parseFloat(amountInput.value);
+                const country = countrySelect.options[countrySelect.selectedIndex];
+                if (!amount || amount <= 0 || !country) {
+                    vatPreview.style.display = "none";
+                    return;
+                }
+                const rateMatch = country.text.match(/(\d+(?:\.\d+)?)%/);
+                if (rateMatch) {
+                    const rate = parseFloat(rateMatch[1]);
+                    const vatAmount = Math.round(amount * rate) / 100;
+                    const gross = amount + vatAmount;
+                    document.getElementById("preview-net").textContent = amount.toFixed(2);
+                    document.getElementById("preview-rate").textContent = rate.toFixed(1) + "%";
+                    document.getElementById("preview-vat").textContent = vatAmount.toFixed(2);
+                    document.getElementById("preview-gross").textContent = gross.toFixed(2);
+                    vatPreview.style.display = "block";
+                }
+            }
+
+            if (countrySelect) countrySelect.addEventListener("change", updatePreview);
+            if (amountInput) amountInput.addEventListener("input", updatePreview);
+            updatePreview();
+        });
+    </script>
+}
+
+<form asp-action="CreateInvoice" asp-route-storeId="@Model.StoreId" method="post">
+    <div class="sticky-header">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-action="Index" asp-route-storeId="@Model.StoreId">VAT</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+            </ol>
+            <h2>@ViewData["Title"]</h2>
+        </nav>
+        <input type="submit" value="Create" class="btn btn-primary" id="Create" />
+    </div>
+
+    <partial name="_StatusMessage" />
+
+    <div class="row">
+        <div class="col-xl-8 col-xxl-constrain">
+            @if (!ViewContext.ModelState.IsValid)
+            {
+                <div asp-validation-summary="ModelOnly"></div>
+            }
+
+            @if (!Model.VATEnabled)
+            {
+                <div class="alert alert-warning">
+                    VAT is not enabled for this store.
+                    <a asp-action="Index" asp-route-storeId="@Model.StoreId">Configure VAT settings</a> first.
+                </div>
+            }
+
+            <h4 class="mb-4">Invoice Details</h4>
+
+            <div class="d-flex justify-content-between">
+                <div class="form-group flex-fill me-4">
+                    <label asp-for="Amount" class="form-label">Net Amount (before VAT)</label>
+                    <input inputmode="decimal" asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Currency" class="form-label"></label>
+                    <input asp-for="Currency" class="form-control w-auto" style="max-width:120px" />
+                    <span asp-validation-for="Currency" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OrderId" class="form-label">Order ID</label>
+                <input asp-for="OrderId" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ItemDesc" class="form-label">Description</label>
+                <input asp-for="ItemDesc" class="form-control" />
+            </div>
+
+            <h4 class="mt-5 mb-4">VAT Information</h4>
+
+            <div class="form-group">
+                <label asp-for="CustomerCountry" class="form-label" data-required>Customer Country</label>
+                <select asp-for="CustomerCountry" class="form-select w-auto" id="CustomerCountry">
+                    <option value="">-- Select country --</option>
+                    @foreach (var country in Model.EUCountries)
+                    {
+                        <option value="@country.Code">@country.Name (@country.Code) - @country.StandardRate%</option>
+                    }
+                </select>
+                <span asp-validation-for="CustomerCountry" class="text-danger"></span>
+                @if (Model.VATMode == VATMode.Fixed)
+                {
+                    <div class="text-muted mt-1">Fixed mode: your home country's VAT rate will be applied regardless of customer country.</div>
+                }
+                else
+                {
+                    <div class="text-muted mt-1">OSS mode: VAT rate will be based on the customer's country.</div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CustomerVATNumber" class="form-label">Customer VAT Number (B2B)</label>
+                <input asp-for="CustomerVATNumber" class="form-control" style="max-width:300px" placeholder="e.g., FR12345678901" />
+                <span asp-validation-for="CustomerVATNumber" class="text-danger"></span>
+                <div class="text-muted mt-1">If provided and valid, reverse charge applies (0% VAT)</div>
+            </div>
+
+            <div id="vat-preview" class="alert alert-info mt-4" style="display:none">
+                <h5 class="alert-heading mb-3">VAT Preview (estimate)</h5>
+                <div class="row text-center">
+                    <div class="col-3">
+                        <div class="text-muted small">Net</div>
+                        <div class="fw-semibold" id="preview-net">-</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-muted small">VAT Rate</div>
+                        <div class="fw-semibold" id="preview-rate">-</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-muted small">VAT Amount</div>
+                        <div class="fw-semibold" id="preview-vat">-</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-muted small">Gross Total</div>
+                        <div class="fw-bold" id="preview-gross">-</div>
+                    </div>
+                </div>
+                <div class="text-muted small mt-2">Final amounts may differ if reverse charge or small business threshold applies.</div>
+            </div>
+
+            <h4 class="mt-5 mb-4">Customer Information</h4>
+
+            <div class="form-group">
+                <label asp-for="BuyerName" class="form-label">Name</label>
+                <input asp-for="BuyerName" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BuyerEmail" class="form-label">Email</label>
+                <input asp-for="BuyerEmail" class="form-control" type="email" />
+                <span asp-validation-for="BuyerEmail" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+</form>

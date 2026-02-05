@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BTCPayServer.Plugins.VAT")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c2d5f6fa5303ec8e535d176600600d3bb485c403")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cd29dd0c566d281864226544859b4dfd1a35eed0")]
 [assembly: System.Reflection.AssemblyProductAttribute("BTCPayServer.Plugins.VAT")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BTCPayServer.Plugins.VAT")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
