@@ -1,7 +1,9 @@
 using System.Globalization;
 using System.Text;
+using BTCPayServer.Client.Models;
 using BTCPayServer.Plugins.VAT.Data;
 using BTCPayServer.Plugins.VAT.Data.Models;
+using BTCPayServer.Services.Invoices;
 using Microsoft.EntityFrameworkCore;
 
 namespace BTCPayServer.Plugins.VAT.Services;
@@ -10,11 +12,13 @@ public class VATReportingService
 {
     private readonly VATDbContext _dbContext;
     private readonly VATRateProvider _rateProvider;
+    private readonly InvoiceRepository _invoiceRepository;
 
-    public VATReportingService(VATDbContext dbContext, VATRateProvider rateProvider)
+    public VATReportingService(VATDbContext dbContext, VATRateProvider rateProvider, InvoiceRepository invoiceRepository)
     {
         _dbContext = dbContext;
         _rateProvider = rateProvider;
+        _invoiceRepository = invoiceRepository;
     }
 
     /// <summary>
@@ -27,11 +31,29 @@ public class VATReportingService
         VATReportGrouping grouping = VATReportGrouping.ByCountry,
         CancellationToken cancellationToken = default)
     {
-        var records = await _dbContext.VATInvoiceRecords
+        var allRecords = await _dbContext.VATInvoiceRecords
             .Where(r => r.StoreId == storeId &&
                         r.CreatedAt >= startDate &&
                         r.CreatedAt < endDate)
             .ToListAsync(cancellationToken);
+
+        // Only include records whose BTCPay invoice is settled or expired with late payment
+        var invoiceIds = allRecords.Select(r => r.InvoiceId).ToArray();
+        var includedInvoiceIds = new HashSet<string>();
+        if (invoiceIds.Length > 0)
+        {
+            var invoices = await _invoiceRepository.GetInvoices(invoiceIds);
+            foreach (var inv in invoices)
+            {
+                if (inv.Status == InvoiceStatus.Settled)
+                    includedInvoiceIds.Add(inv.Id);
+                else if (inv.Status == InvoiceStatus.Expired &&
+                         inv.ExceptionStatus == InvoiceExceptionStatus.PaidLate)
+                    includedInvoiceIds.Add(inv.Id);
+            }
+        }
+
+        var records = allRecords.Where(r => includedInvoiceIds.Contains(r.InvoiceId)).ToList();
 
         var report = new VATReport
         {
