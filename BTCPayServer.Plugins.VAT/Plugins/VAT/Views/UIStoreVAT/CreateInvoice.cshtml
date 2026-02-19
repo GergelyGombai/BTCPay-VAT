@@ -11,14 +11,34 @@
             const countrySelect = document.getElementById("CustomerCountry");
             const vatPreview = document.getElementById("vat-preview");
             const amountInput = document.getElementById("Amount");
+            const nonEuGroup = document.getElementById("non-eu-code-group");
+            const nonEuInput = document.getElementById("NonEUCountryCode");
+
+            function updateNonEuVisibility() {
+                const isNonEu = countrySelect.value === "NON-EU";
+                nonEuGroup.style.display = isNonEu ? "block" : "none";
+                if (isNonEu && nonEuInput.value.length === 2) {
+                    countrySelect.value = "NON-EU";
+                }
+            }
 
             function updatePreview() {
                 const amount = parseFloat(amountInput.value);
-                const country = countrySelect.options[countrySelect.selectedIndex];
-                if (!amount || amount <= 0 || !country) {
+                if (!amount || amount <= 0 || !countrySelect.value) {
                     vatPreview.style.display = "none";
                     return;
                 }
+
+                if (countrySelect.value === "NON-EU") {
+                    document.getElementById("preview-net").textContent = amount.toFixed(2);
+                    document.getElementById("preview-rate").textContent = "0% (Export)";
+                    document.getElementById("preview-vat").textContent = "0.00";
+                    document.getElementById("preview-gross").textContent = amount.toFixed(2);
+                    vatPreview.style.display = "block";
+                    return;
+                }
+
+                const country = countrySelect.options[countrySelect.selectedIndex];
                 const rateMatch = country.text.match(/(\d+(?:\.\d+)?)%/);
                 if (rateMatch) {
                     const rate = parseFloat(rateMatch[1]);
@@ -32,8 +52,28 @@
                 }
             }
 
-            if (countrySelect) countrySelect.addEventListener("change", updatePreview);
+            // When form submits, replace NON-EU with the actual country code
+            document.querySelector("form").addEventListener("submit", function () {
+                if (countrySelect.value === "NON-EU" && nonEuInput.value.length === 2) {
+                    // Add a hidden input with the real country code
+                    const hidden = document.createElement("input");
+                    hidden.type = "hidden";
+                    hidden.name = "CustomerCountry";
+                    hidden.value = nonEuInput.value.toUpperCase();
+                    this.appendChild(hidden);
+                    countrySelect.removeAttribute("name");
+                }
+            });
+
+            if (countrySelect) {
+                countrySelect.addEventListener("change", function () {
+                    updateNonEuVisibility();
+                    updatePreview();
+                });
+            }
             if (amountInput) amountInput.addEventListener("input", updatePreview);
+            if (nonEuInput) nonEuInput.addEventListener("input", updatePreview);
+            updateNonEuVisibility();
             updatePreview();
         });
     </script>
@@ -101,19 +141,30 @@
                 <label asp-for="CustomerCountry" class="form-label" data-required>Customer Country</label>
                 <select asp-for="CustomerCountry" class="form-select w-auto" id="CustomerCountry">
                     <option value="">-- Select country --</option>
-                    @foreach (var country in Model.EUCountries)
-                    {
-                        <option value="@country.Code">@country.Name (@country.Code) - @country.StandardRate%</option>
-                    }
+                    <optgroup label="EU Countries (VAT applies)">
+                        @foreach (var country in Model.EUCountries)
+                        {
+                            <option value="@country.Code">@country.Name (@country.Code) - @country.StandardRate%</option>
+                        }
+                    </optgroup>
+                    <optgroup label="Non-EU (0% VAT - Export)">
+                        <option value="NON-EU">Non-EU Country (0% VAT)</option>
+                    </optgroup>
                 </select>
                 <span asp-validation-for="CustomerCountry" class="text-danger"></span>
+                <div id="non-eu-code-group" class="mt-2" style="display:none">
+                    <label class="form-label">Country Code (ISO 3166-1 alpha-2)</label>
+                    <input type="text" id="NonEUCountryCode" class="form-control w-auto" maxlength="2"
+                           style="max-width:100px; text-transform:uppercase" placeholder="e.g., US" />
+                    <div class="text-muted mt-1">Enter the 2-letter country code for the non-EU customer</div>
+                </div>
                 @if (Model.VATMode == VATMode.Fixed)
                 {
-                    <div class="text-muted mt-1">Fixed mode: your home country's VAT rate will be applied regardless of customer country.</div>
+                    <div class="text-muted mt-1">Fixed mode: home country VAT for EU customers. Non-EU exports are zero-rated.</div>
                 }
                 else
                 {
-                    <div class="text-muted mt-1">OSS mode: VAT rate will be based on the customer's country.</div>
+                    <div class="text-muted mt-1">OSS mode: customer country VAT for EU. Non-EU exports are zero-rated.</div>
                 }
             </div>
 

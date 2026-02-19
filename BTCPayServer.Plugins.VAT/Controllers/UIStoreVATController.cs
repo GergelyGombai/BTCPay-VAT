@@ -120,9 +120,9 @@ public class UIStoreVATController : Controller
             ModelState.AddModelError(nameof(model.Amount), "Amount must be greater than 0");
         }
 
-        if (!_rateProvider.IsEUCountry(model.CustomerCountry) && settings?.Mode == VATMode.OSS)
+        if (string.IsNullOrWhiteSpace(model.CustomerCountry) || model.CustomerCountry.Length != 2)
         {
-            ModelState.AddModelError(nameof(model.CustomerCountry), "Customer country must be an EU country for OSS mode");
+            ModelState.AddModelError(nameof(model.CustomerCountry), "A valid 2-letter country code is required");
         }
 
         if (!ModelState.IsValid)

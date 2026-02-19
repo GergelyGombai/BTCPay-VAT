@@ -55,26 +55,36 @@ public class VATCalculationService : IVATCalculationService
             };
         }
 
-        // Determine the applicable country for VAT
-        string vatCountry;
-        if (settings.Mode == VATMode.Fixed)
+        // Non-EU customer: export, zero-rated VAT
+        if (!_rateProvider.IsEUCountry(customerCountry))
         {
-            vatCountry = settings.HomeCountry;
-        }
-        else // OSS mode
-        {
-            vatCountry = _rateProvider.IsEUCountry(customerCountry) ? customerCountry : settings.HomeCountry;
+            return new VATCalculationResult
+            {
+                NetAmount = netAmount,
+                VATRate = 0,
+                VATAmount = 0,
+                GrossAmount = netAmount,
+                Currency = currency,
+                CountryCode = customerCountry,
+                CountryName = customerCountry,
+                ReverseChargeApplied = false,
+                ModeApplied = settings.Mode,
+                BelowSmallBusinessThreshold = false
+            };
         }
 
-        // Check for B2B reverse charge
+        // Determine the applicable EU country for VAT
+        string vatCountry = settings.Mode == VATMode.Fixed
+            ? settings.HomeCountry
+            : customerCountry;
+
+        // Check for B2B reverse charge (EU cross-border only)
         bool reverseChargeApplied = false;
         string? validatedVATNumber = null;
 
         if (!string.IsNullOrWhiteSpace(customerVATNumber) &&
             settings.ValidateVIES &&
-            settings.Mode == VATMode.OSS &&
-            customerCountry != settings.HomeCountry &&
-            _rateProvider.IsEUCountry(customerCountry))
+            customerCountry != settings.HomeCountry)
         {
             var viesResult = await _viesService.ValidateVATNumberAsync(customerVATNumber, cancellationToken);
             if (viesResult.IsValid)
