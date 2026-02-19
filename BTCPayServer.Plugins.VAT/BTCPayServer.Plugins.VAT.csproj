@@ -4,6 +4,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+        <Product>VAT</Product>
+        <Description>EU VAT calculation, VIES validation, and invoicing for BTCPay Server</Description>
     </PropertyGroup>
 
     <ItemGroup>
