@@ -40,11 +40,6 @@ public class VATSettingsResponse
     public bool ValidateVIES { get; set; }
 
     /// <summary>
-    /// Whether business is below small business threshold
-    /// </summary>
-    public bool BelowSmallBusinessThreshold { get; set; }
-
-    /// <summary>
     /// Standard VAT rate for home country (for Fixed mode)
     /// </summary>
     public decimal HomeCountryVATRate { get; set; }

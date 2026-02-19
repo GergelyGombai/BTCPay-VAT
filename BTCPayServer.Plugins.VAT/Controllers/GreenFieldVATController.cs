@@ -60,7 +60,6 @@ public class GreenFieldVATController : ControllerBase
             VATNumber = settings.VATNumber,
             Enabled = settings.Enabled,
             ValidateVIES = settings.ValidateVIES,
-            BelowSmallBusinessThreshold = settings.BelowSmallBusinessThreshold,
             HomeCountryVATRate = rateInfo?.StandardRate ?? 0
         });
     }
@@ -98,7 +97,6 @@ public class GreenFieldVATController : ControllerBase
             VATNumber = settings.VATNumber,
             Enabled = settings.Enabled,
             ValidateVIES = settings.ValidateVIES,
-            BelowSmallBusinessThreshold = settings.BelowSmallBusinessThreshold,
             HomeCountryVATRate = rateInfo?.StandardRate ?? 0
         });
     }

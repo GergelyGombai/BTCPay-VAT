@@ -47,7 +47,6 @@ public class UIStoreVATController : Controller
             VATNumber = settings?.VATNumber,
             Enabled = settings?.Enabled ?? false,
             ValidateVIES = settings?.ValidateVIES ?? true,
-            BelowSmallBusinessThreshold = settings?.BelowSmallBusinessThreshold ?? false,
             EUCountries = GetEUCountryOptions()
         };
 
@@ -75,8 +74,7 @@ public class UIStoreVATController : Controller
             HomeCountry = model.HomeCountry,
             VATNumber = model.VATNumber,
             Enabled = model.Enabled,
-            ValidateVIES = model.ValidateVIES,
-            BelowSmallBusinessThreshold = model.BelowSmallBusinessThreshold
+            ValidateVIES = model.ValidateVIES
         };
 
         await _vatService.UpdateStoreSettingsAsync(storeId, request);
@@ -271,7 +269,6 @@ public class VATSettingsViewModel
     public string? VATNumber { get; set; }
     public bool Enabled { get; set; }
     public bool ValidateVIES { get; set; }
-    public bool BelowSmallBusinessThreshold { get; set; }
     public List<EUCountryOption> EUCountries { get; set; } = new();
 }
 

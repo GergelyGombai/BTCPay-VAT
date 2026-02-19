@@ -34,8 +34,4 @@ public class UpdateVATSettingsRequest
     /// </summary>
     public bool ValidateVIES { get; set; } = true;
 
-    /// <summary>
-    /// If true, business is below small business threshold and doesn't charge VAT
-    /// </summary>
-    public bool BelowSmallBusinessThreshold { get; set; }
 }

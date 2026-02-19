@@ -54,8 +54,4 @@ public class VATCalculationResult
     /// </summary>
     public VATMode ModeApplied { get; set; }
 
-    /// <summary>
-    /// Whether the business is below small business threshold (no VAT charged)
-    /// </summary>
-    public bool BelowSmallBusinessThreshold { get; set; }
 }

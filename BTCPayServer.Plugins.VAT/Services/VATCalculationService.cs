@@ -38,23 +38,6 @@ public class VATCalculationService : IVATCalculationService
             return CreateZeroVATResult(netAmount, currency, customerCountry, "VAT not enabled");
         }
 
-        if (settings.BelowSmallBusinessThreshold)
-        {
-            return new VATCalculationResult
-            {
-                NetAmount = netAmount,
-                VATRate = 0,
-                VATAmount = 0,
-                GrossAmount = netAmount,
-                Currency = currency,
-                CountryCode = customerCountry,
-                CountryName = _rateProvider.GetRateInfo(customerCountry)?.CountryName ?? customerCountry,
-                ReverseChargeApplied = false,
-                ModeApplied = settings.Mode,
-                BelowSmallBusinessThreshold = true
-            };
-        }
-
         // Non-EU customer: export, zero-rated VAT
         if (!_rateProvider.IsEUCountry(customerCountry))
         {
@@ -69,7 +52,6 @@ public class VATCalculationService : IVATCalculationService
                 CountryName = customerCountry,
                 ReverseChargeApplied = false,
                 ModeApplied = settings.Mode,
-                BelowSmallBusinessThreshold = false
             };
         }
 
@@ -118,8 +100,7 @@ public class VATCalculationService : IVATCalculationService
             CountryName = rateInfo?.CountryName ?? vatCountry,
             ReverseChargeApplied = reverseChargeApplied,
             CustomerVATNumber = validatedVATNumber,
-            ModeApplied = settings.Mode,
-            BelowSmallBusinessThreshold = false
+            ModeApplied = settings.Mode
         };
     }
 
@@ -213,7 +194,6 @@ public class VATCalculationService : IVATCalculationService
         settings.VATNumber = request.VATNumber;
         settings.Enabled = request.Enabled;
         settings.ValidateVIES = request.ValidateVIES;
-        settings.BelowSmallBusinessThreshold = request.BelowSmallBusinessThreshold;
         settings.UpdatedAt = DateTimeOffset.UtcNow;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -234,7 +214,6 @@ public class VATCalculationService : IVATCalculationService
             CountryName = _rateProvider.GetRateInfo(customerCountry)?.CountryName ?? customerCountry,
             ReverseChargeApplied = false,
             ModeApplied = VATMode.Fixed,
-            BelowSmallBusinessThreshold = false
         };
     }
 }

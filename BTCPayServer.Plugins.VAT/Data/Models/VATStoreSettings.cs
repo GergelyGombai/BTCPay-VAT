@@ -32,12 +32,6 @@ public class VATStoreSettings
     /// </summary>
     public bool ValidateVIES { get; set; } = true;
 
-    /// <summary>
-    /// If true, business is below small business threshold and doesn't charge VAT
-    /// This is managed manually by the merchant
-    /// </summary>
-    public bool BelowSmallBusinessThreshold { get; set; }
-
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 }
