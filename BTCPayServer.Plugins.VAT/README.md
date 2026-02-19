@@ -1,12 +1,59 @@
-# BTCPay Server VAT Plugin - API Documentation
+# BTCPay Server VAT Plugin
 
-All store-scoped endpoints require [Greenfield API authentication](https://docs.btcpayserver.org/API/Greenfield/v1/) via API key or Bearer token.
+EU VAT calculation, VIES validation, and invoicing for BTCPay Server.
+
+## Features
+
+- **Fixed and OSS modes** — charge your home country's VAT rate (Fixed) or the customer's country rate (One-Stop Shop)
+- **Automatic VIES validation** — B2B customers with valid EU VAT numbers get reverse charge (0% VAT)
+- **Non-EU exports** — automatically zero-rated for customers outside the EU
+- **Invoice creation** — create BTCPay invoices with VAT automatically calculated and recorded
+- **VAT bookkeeping** — every invoice stores net, VAT, and gross amounts with country and mode metadata
+- **EU VAT rate lookup** — built-in rates for all 27 EU member states
+
+## Installation
+
+Install from the BTCPay Server plugin marketplace, or build manually:
+
+```bash
+dotnet build -c Release
+```
+
+The project references `../btcpayserver/BTCPayServer/BTCPayServer.csproj`, so you need the BTCPay Server source checked out as a sibling directory.
+
+## Configuration
+
+1. Navigate to your store's **Plugins > VAT** in the sidebar
+2. Enable VAT calculation
+3. Select your **VAT Mode**:
+   - **Fixed** — always charges your home country's VAT rate
+   - **OSS** — charges VAT based on the customer's EU country
+4. Set your **Home Country** and **VAT Registration Number**
+5. Optionally enable **VIES validation** for automatic B2B reverse charge
+
+## VAT Calculation Logic
+
+| Scenario | VAT Rate Applied |
+|---|---|
+| EU customer, Fixed mode | Home country rate |
+| EU customer, OSS mode | Customer's country rate |
+| EU B2B with valid VAT number (cross-border) | 0% (reverse charge) |
+| Non-EU customer (any mode) | 0% (export, zero-rated) |
+
+When a customer VAT number is provided:
+- The country prefix must match the customer country
+- The number is validated against the EU VIES database
+- If validation fails, an error is returned (not silently charged)
+
+## API Documentation
+
+All endpoints require [Greenfield API authentication](https://docs.btcpayserver.org/API/Greenfield/v1/) via API key or Bearer token.
 
 Base URL: `https://your-btcpay-instance.com`
 
-## Settings
+### Settings
 
-### Get VAT Settings
+#### Get VAT Settings
 
 ```
 GET /api/v1/stores/{storeId}/vat/settings
@@ -48,7 +95,7 @@ curl -s \
 
 ---
 
-### Update VAT Settings
+#### Update VAT Settings
 
 ```
 PUT /api/v1/stores/{storeId}/vat/settings
@@ -84,9 +131,9 @@ curl -s -X PUT \
 
 ---
 
-## VAT Calculation
+### VAT Calculation
 
-### Calculate VAT (Preview)
+#### Calculate VAT (Preview)
 
 Calculates VAT without creating an invoice. Useful for showing a price breakdown before checkout.
 
@@ -193,20 +240,11 @@ curl -s -X POST \
 | `customerCountry` | `string` | Yes | Customer's ISO 3166-1 alpha-2 country code |
 | `customerVATNumber` | `string?` | No | Customer's VAT number for B2B reverse charge |
 
-**VAT calculation logic:**
-
-| Scenario | VAT Rate Applied |
-|---|---|
-| EU customer, Fixed mode | Home country rate |
-| EU customer, OSS mode | Customer's country rate |
-| EU B2B with valid VAT number (cross-border) | 0% (reverse charge) |
-| Non-EU customer (any mode) | 0% (export, zero-rated) |
-
 ---
 
-## Invoices
+### Invoices
 
-### Create Invoice with VAT
+#### Create Invoice with VAT
 
 Creates a BTCPay Server invoice with VAT automatically calculated and recorded. The invoice amount is the **gross amount** (net + VAT). VAT details are stored in the invoice's `metadata.vatData` field for bookkeeping.
 
@@ -295,7 +333,7 @@ curl -s -X POST \
 
 ---
 
-### Get Invoice VAT Details
+#### Get Invoice VAT Details
 
 Retrieve the VAT record for an invoice created through this plugin.
 
@@ -342,17 +380,15 @@ curl -s \
 
 ---
 
-## Utility Endpoints
+### Utility Endpoints
 
-### Get EU VAT Rates
+#### Get EU VAT Rates
 
 Returns all current EU member state VAT rates.
 
 ```
 GET /api/v1/vat/rates
 ```
-
-**Authentication:** Greenfield API key or Bearer token required.
 
 **Example:**
 
@@ -394,15 +430,13 @@ curl -s \
 
 ---
 
-### Validate VAT Number (VIES)
+#### Validate VAT Number (VIES)
 
 Validates a European VAT number against the EU VIES database.
 
 ```
 GET /api/v1/vat/validate/{vatNumber}
 ```
-
-**Authentication:** Greenfield API key or Bearer token required.
 
 **Example:**
 
@@ -448,7 +482,7 @@ curl -s \
 
 ---
 
-## Error Responses
+### Error Responses
 
 All endpoints return errors in this format:
 
@@ -460,7 +494,7 @@ All endpoints return errors in this format:
 
 | Status | Meaning |
 |---|---|
-| `400` | Invalid request (validation error, invalid country code) |
+| `400` | Invalid request (validation error, invalid country code, failed VIES validation) |
 | `401` | Missing or invalid authentication |
 | `403` | Insufficient permissions |
 | `404` | Settings or record not found |

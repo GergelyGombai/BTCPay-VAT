@@ -1,7 +1,7 @@
 @using BTCPayServer.Abstractions.Extensions
 @model VATSettingsViewModel
 @{
-    ViewData.SetActivePage("VAT", "BTCPayServer.Plugins.VAT", "VAT Settings");
+    ViewData.SetLayoutModel(new LayoutModel("VAT", "VAT Settings"));
 }
 
 <form method="post" asp-action="Index" asp-route-storeId="@Model.StoreId">

@@ -1,7 +1,7 @@
 @using BTCPayServer.Abstractions.Extensions
 @model CreateVATInvoiceViewModel
 @{
-    ViewData.SetActivePage("VAT", "BTCPayServer.Plugins.VAT", "Create Invoice with VAT");
+    ViewData.SetLayoutModel(new LayoutModel("VAT", "Create Invoice with VAT"));
 }
 
 @section PageFootContent {

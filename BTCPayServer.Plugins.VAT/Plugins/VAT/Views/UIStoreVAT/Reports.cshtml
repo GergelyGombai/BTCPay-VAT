@@ -1,7 +1,7 @@
 @using BTCPayServer.Abstractions.Extensions
 @model VATReportsViewModel
 @{
-    ViewData.SetActivePage("VAT", "BTCPayServer.Plugins.VAT", "VAT Reports");
+    ViewData.SetLayoutModel(new LayoutModel("VAT", "VAT Reports"));
 }
 
 <div class="sticky-header">
