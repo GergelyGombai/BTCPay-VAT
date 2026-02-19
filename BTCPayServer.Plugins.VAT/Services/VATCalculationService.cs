@@ -68,12 +68,22 @@ public class VATCalculationService : IVATCalculationService
             settings.ValidateVIES &&
             customerCountry != settings.HomeCountry)
         {
-            var viesResult = await _viesService.ValidateVATNumberAsync(customerVATNumber, cancellationToken);
-            if (viesResult.IsValid)
+            var vatCountryPrefix = _viesService.ExtractCountryCode(customerVATNumber);
+            if (vatCountryPrefix != null && vatCountryPrefix != customerCountry)
             {
-                reverseChargeApplied = true;
-                validatedVATNumber = customerVATNumber;
+                throw new VATValidationException(
+                    $"VAT number country ({vatCountryPrefix}) does not match customer country ({customerCountry})");
             }
+
+            var viesResult = await _viesService.ValidateVATNumberAsync(customerVATNumber, cancellationToken);
+            if (!viesResult.IsValid)
+            {
+                throw new VATValidationException(
+                    $"VAT number validation failed: {viesResult.ErrorMessage}");
+            }
+
+            reverseChargeApplied = true;
+            validatedVATNumber = customerVATNumber;
         }
 
         // Get the VAT rate

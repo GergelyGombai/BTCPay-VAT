@@ -116,15 +116,22 @@ public class GreenFieldVATController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var result = await _vatService.CalculateVATAsync(
-            storeId,
-            request.Amount,
-            request.Currency,
-            request.CustomerCountry,
-            request.CustomerVATNumber,
-            cancellationToken);
+        try
+        {
+            var result = await _vatService.CalculateVATAsync(
+                storeId,
+                request.Amount,
+                request.Currency,
+                request.CustomerCountry,
+                request.CustomerVATNumber,
+                cancellationToken);
 
-        return Ok(result);
+            return Ok(result);
+        }
+        catch (VATValidationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     /// <summary>
