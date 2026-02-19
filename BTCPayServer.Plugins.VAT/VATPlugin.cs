@@ -21,7 +21,7 @@ public class VATPlugin : BaseBTCPayServerPlugin
     public override void Execute(IServiceCollection services)
     {
         // Register plugin nav extension (appears in PLUGINS section)
-        services.AddUIExtension("header-nav", "/Plugins/VAT/Views/Shared/VATNav.cshtml");
+        services.AddUIExtension("store-integrations-nav", "/Plugins/VAT/Views/Shared/VATNav.cshtml");
 
         services.AddDbContext<VATDbContext>((provider, builder) =>
         {
