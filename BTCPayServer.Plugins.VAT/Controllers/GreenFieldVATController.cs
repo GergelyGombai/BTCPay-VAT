@@ -294,7 +294,7 @@ public class GreenFieldVATController : ControllerBase
     /// Get all EU VAT rates
     /// </summary>
     [HttpGet("~/api/v1/vat/rates")]
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemes.Greenfield)]
     public ActionResult<VATRatesResponse> GetAllRates()
     {
         var rates = _rateProvider.GetAllRates();
@@ -316,7 +316,7 @@ public class GreenFieldVATController : ControllerBase
     /// Validate a VAT number via VIES
     /// </summary>
     [HttpGet("~/api/v1/vat/validate/{vatNumber}")]
-    [AllowAnonymous]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemes.Greenfield)]
     public async Task<ActionResult<VIESValidationResponse>> ValidateVATNumber(
         string vatNumber,
         CancellationToken cancellationToken)
